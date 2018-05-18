@@ -1,0 +1,20 @@
+---
+# provision localhost
+
+- name: Manage CF Stack
+  hosts: docker
+  gather_facts: yes
+
+  tasks:
+    - debug:
+        var: ansible_user_id
+      tags:
+        - build
+
+    - name: setup a service
+      become: yes
+      service:
+        enabled: yes
+        name: not-existing-service
+      tags:
+        - build

@@ -1,0 +1,11 @@
+ARG from=ubuntu:xenial
+FROM ansible-docker-weirdness/${from}
+
+ADD . /build
+WORKDIR /build
+
+EXPOSE 22
+
+RUN make provision VENV=/build-venv
+
+CMD ["/sbin/init"]
