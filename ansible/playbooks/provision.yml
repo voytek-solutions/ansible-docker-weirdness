@@ -1,0 +1,15 @@
+---
+# provision localhost
+
+- name: Manage CF Stack
+  hosts: localhost
+  gather_facts: yes
+
+  tasks:
+    - name: setup a service
+      become: yes
+      service:
+        enabled: yes
+        name: not-existing-service
+      tags:
+        - build

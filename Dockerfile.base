@@ -1,0 +1,36 @@
+ARG from=ubuntu:xenial
+FROM ${from}
+
+##
+# Install essential build and development packages.
+#
+RUN rm -f /etc/apt/apt.conf.d/docker-clean \
+	&& apt-get update \
+	&& apt-get -qqy install \
+		build-essential \
+		python-apt \
+		python-pip \
+		software-properties-common \
+		ssh \
+		sudo \
+	&& pip install virtualenv
+
+# let Upstart know it's in a container
+ENV container docker
+
+RUN echo "root:D0cker" | chpasswd
+
+# we can has SSH
+EXPOSE 22
+
+ADD . /build
+WORKDIR /build
+
+##
+# installs virtualenv, to speed up other builds.
+# Make sure to add `VENV=/build-venv` to all your make commands
+#
+RUN make /build-venv VENV=/build-venv \
+	&& rm -rf /build
+
+CMD ["/sbin/init"]
